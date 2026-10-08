@@ -29,7 +29,7 @@ def vazamento(df, chave):
     return n[n > 1].index
 
 res = []
-for nome, df in [("rotuladas (300)", rotulada), ("base inteira", base)]:
+for nome, df in [(f"rotuladas ({len(rot)})", rotulada), ("base inteira", base)]:
     for chave in ["id_leitura", "medidor"]:
         res.append((nome, chave, df[chave].nunique(), len(vazamento(df, chave))))
     print(nome, df.groupby("conjunto").foto.nunique().to_dict())

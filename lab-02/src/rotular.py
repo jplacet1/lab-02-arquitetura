@@ -1,4 +1,4 @@
-"""Ferramenta de rotulagem local. Uso: python rotular.py joao   (ou henrique); "python rotular.py joao v2" para a rodada v2
+"""Ferramenta de rotulagem local. Uso: python rotular.py joao   (ou henrique); "python rotular.py joao v2" ou "... extra" para as rodadas extras
 Lê rotulos/lista_<nome>.csv, mostra a foto e grava rotulos/rotulos_<nome>.csv a cada foto.
 Teclas: 1-4 cena | q w e r t defeitos (liga/desliga) | Enter salva e avança | Backspace volta.
 Rotule os dois sem conversar até terminar (as 50 fotos comuns são a dupla rotulagem às cegas)."""
@@ -14,7 +14,7 @@ TECLAS_DEF = "qwert"
 pasta_do_lote = {v: k for k, v in LOTES.items()}
 
 nome = sys.argv[1]
-sufixo = "v2_" if len(sys.argv) > 2 and sys.argv[2] == "v2" else ""  # rodada v2: 30 fotos comuns novas
+sufixo = f"{sys.argv[2]}_" if len(sys.argv) > 2 else ""  # rodada: "v2" (30 comuns) ou "extra" (fotos extras)
 with open(ROTULOS / f"lista_{sufixo}{nome}.csv", encoding="utf-8") as fh:
     itens = list(csv.DictReader(fh))
 saida = ROTULOS / f"rotulos_{sufixo}{nome}.csv"
