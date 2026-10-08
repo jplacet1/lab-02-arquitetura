@@ -1,0 +1,11 @@
+classe,kappa,"ok(>=0,6)"
+cena (4 classes),0.718,True
+cena=digital,0.864,True
+cena=ciclometrico,0.767,True
+cena=cena_ocorrencia,0.459,False
+cena=nao_medidor,0.0,False
+defeito=reflexo,0.337,False
+defeito=fora_de_foco,0.634,True
+defeito=tampa_suja,0.649,True
+defeito=enquadramento,0.389,False
+defeito=display_apagado,0.37,False

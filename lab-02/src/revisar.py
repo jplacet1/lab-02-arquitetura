@@ -1,10 +1,11 @@
-"""Ferramenta de rotulagem local. Uso: python rotular.py joao   (ou henrique); "python rotular.py joao v2" para a rodada v2
-Lê rotulos/lista_<nome>.csv, mostra a foto e grava rotulos/rotulos_<nome>.csv a cada foto.
+"""Revisão conjunta das divergências. Uso: python lab-02/src/revisar.py
+Mostra cada foto de rotulos/divergencias.csv com o que cada um marcou e grava a decisão da dupla
+em rotulos/decisoes.csv a cada foto.
 Teclas: 1-4 cena | q w e r t defeitos (liga/desliga) | Enter salva e avança | Backspace volta.
-Rotule os dois sem conversar até terminar (as 50 fotos comuns são a dupla rotulagem às cegas)."""
+Em cena_ocorrencia e nao_medidor os defeitos são zerados ao salvar (regra da v2)."""
 import csv
-import sys
 import tkinter as tk
+import pandas as pd
 from PIL import Image, ImageTk
 from config import DADOS, LOTES, ROTULOS
 
@@ -13,11 +14,10 @@ DEFEITOS = ["reflexo", "fora_de_foco", "tampa_suja", "enquadramento", "display_a
 TECLAS_DEF = "qwert"
 pasta_do_lote = {v: k for k, v in LOTES.items()}
 
-nome = sys.argv[1]
-sufixo = "v2_" if len(sys.argv) > 2 and sys.argv[2] == "v2" else ""  # rodada v2: 30 fotos comuns novas
-with open(ROTULOS / f"lista_{sufixo}{nome}.csv", encoding="utf-8") as fh:
-    itens = list(csv.DictReader(fh))
-saida = ROTULOS / f"rotulos_{sufixo}{nome}.csv"
+a = pd.read_csv(ROTULOS / "rotulos_joao.csv").set_index("nome_arquivo")
+b = pd.read_csv(ROTULOS / "rotulos_henrique.csv").set_index("nome_arquivo")
+itens = pd.read_csv(ROTULOS / "divergencias.csv").to_dict("records")
+saida = ROTULOS / "decisoes.csv"
 feitos = {}
 if saida.exists():
     with open(saida, encoding="utf-8") as fh:
@@ -25,15 +25,19 @@ if saida.exists():
 
 def salvar():
     with open(saida, "w", newline="", encoding="utf-8") as fh:
-        w = csv.DictWriter(fh, ["nome_arquivo", "lote", "rotulador", "cena", *DEFEITOS])
+        w = csv.DictWriter(fh, ["nome_arquivo", "lote", "cena", *DEFEITOS])
         w.writeheader()
         for it in itens:
             if it["nome_arquivo"] in feitos:
                 w.writerow(feitos[it["nome_arquivo"]])
 
-raiz = tk.Tk(); raiz.title(f"Rotulagem - {nome}")
+def resumo(rot, nome):
+    defs = ", ".join(d for d in DEFEITOS if rot[d]) or "-"
+    return f"{nome}: {rot['cena']} | defeitos: {defs}"
+
+raiz = tk.Tk(); raiz.title("Revisão das divergências")
 rotulo_img = tk.Label(raiz); rotulo_img.pack()
-info = tk.Label(raiz, font=("Segoe UI", 11)); info.pack()
+info = tk.Label(raiz, font=("Segoe UI", 11), justify="left"); info.pack()
 var_cena = tk.StringVar(value="")
 var_def = {d: tk.IntVar() for d in DEFEITOS}
 quadro = tk.Frame(raiz); quadro.pack()
@@ -49,21 +53,24 @@ def mostrar():
         info.config(text="Terminou. Pode fechar."); rotulo_img.config(image=""); return
     it = itens[i]
     img = Image.open(DADOS / pasta_do_lote[it["lote"]] / it["nome_arquivo"])
-    img = img.resize((int(img.width * 1.6), int(img.height * 1.6)))
+    img = img.resize((int(img.width * 1.4), int(img.height * 1.4)))
     foto = ImageTk.PhotoImage(img); rotulo_img.image = foto; rotulo_img.config(image=foto)
     ant = feitos.get(it["nome_arquivo"])
     var_cena.set(ant["cena"] if ant else "")
     for d in DEFEITOS:
         var_def[d].set(int(ant[d]) if ant else 0)
-    info.config(text=f"{i+1}/{len(itens)}   rotulados: {len(feitos)}")
+    info.config(text=f"{i+1}/{len(itens)}   decididas: {len(feitos)}\n"
+                     f"{resumo(a.loc[it['nome_arquivo']], 'João')}\n"
+                     f"{resumo(b.loc[it['nome_arquivo']], 'Henrique')}")
 
 def avancar(_=None):
     i = estado["i"]
     if i >= len(itens) or not var_cena.get():
         return  # cena é obrigatória
     it = itens[i]
+    sem_defeito = var_cena.get() in ("cena_ocorrencia", "nao_medidor")
     feitos[it["nome_arquivo"]] = {"nome_arquivo": it["nome_arquivo"], "lote": it["lote"],
-        "rotulador": nome, "cena": var_cena.get(), **{d: var_def[d].get() for d in DEFEITOS}}
+        "cena": var_cena.get(), **{d: 0 if sem_defeito else var_def[d].get() for d in DEFEITOS}}
     salvar(); estado["i"] += 1; mostrar()
 
 def voltar(_=None):
