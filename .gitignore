@@ -1,0 +1,20 @@
+# Dados do cliente (LGPD): nunca versionar
+*.jpg
+*.jpeg
+*.png
+*.zip
+*.xlsx
+*.pt
+*.pth
+*.onnx
+data/
+dados/
+Base de Dados*/
+
+# CSV bloqueado por padrão; só os rótulos (nomes de arquivo + classes) entram
+*.csv
+!lab-02/rotulos/*.csv
+
+.venv/
+__pycache__/
+.ipynb_checkpoints/
