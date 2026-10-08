@@ -2,7 +2,7 @@
 
 Grupo GridVision (G4). Nesta disciplina somos João Pedro e Henrique Bouwman.
 
-**Ferramenta:** Claude (Claude Code, modelo Claude Sonnet 5.5), usado pelo João Pedro em sessões de trabalho até 08/10/2026. O Claude leu e executou código na máquina do João. Os dados do cliente (fotos e CSVs originais) ficaram só no computador dele, e nenhuma foto está neste repositório.
+**Ferramenta:** Claude (Claude Code, modelo Claude Sonnet 5.5), usado pelo grupo (João Pedro e Henrique, trabalhando juntos) em sessões de trabalho até 08/10/2026. A sessão rodou na máquina do João, e o Claude leu e executou código nela. Os pedidos foram feitos por nós dois em conjunto. Os dados do cliente (fotos e CSVs originais) ficaram só no computador dele, e nenhuma foto está neste repositório.
 
 ## O que a IA fez e o que nós fizemos
 
@@ -35,9 +35,9 @@ Grupo GridVision (G4). Nesta disciplina somos João Pedro e Henrique Bouwman.
 - As decisões das 29 divergências do kappa v1.
 - A escolha de aceitar ou recusar o que o Claude propôs, listada acima.
 
-## Henrique Bouwman
+## Outros usos
 
-(Henrique: escreva aqui como usou ou não usou IA neste laboratório. Se não usou, escreva isso. Não deixe em branco.)
+Não usamos nenhuma outra ferramenta de IA generativa neste laboratório. (Henrique: se você usou outra ferramenta por conta própria, acrescente aqui. Se não, apague este aviso.)
 
 ## Declaração
 
